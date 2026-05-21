@@ -12,7 +12,7 @@ def get_db_config():
     config = {
         "host": os.environ.get("MYSQL_HOST", "localhost"),
         "user": os.environ.get("MYSQL_USER", "root"),
-        "password": os.environ.get("MYSQL_PASSWORD", ""),
+        "password": os.environ.get("MYSQL_PASSWORD", "supritha@1.23"),
         "database": os.environ.get("MYSQL_DATABASE", "hospital_db"),
     }
     port = os.environ.get("MYSQL_PORT")
