@@ -1,0 +1,72 @@
+{% extends "patient/base.html" %}
+{% block title %}My Bills — Patient{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>💳 Billing & Invoices</h1>
+</div>
+
+<!-- Pending Bills Card -->
+<div class="card" style="border-left-color: var(--color-danger); margin-bottom: 2rem;">
+  <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background-color: var(--color-danger-bg); color: var(--color-danger); display: flex; align-items: center; justify-content: center;">
+        <i data-lucide="alert-circle" style="width: 24px; height: 24px;"></i>
+      </div>
+      <div>
+        <h2 style="font-size: 1.1rem; font-weight: 600; color: var(--text-main);">Pending Dues</h2>
+        <p style="font-size: 0.8rem; color: var(--text-muted);">Please clear all outstanding medical invoices.</p>
+      </div>
+    </div>
+    <div style="text-align: right;">
+      <div style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700; color: var(--color-danger);">
+        ₹{{ "%.2f"|format(pending) }}
+      </div>
+      <span class="badge badge-red" style="font-size: 0.72rem;">Outstanding Amount</span>
+    </div>
+  </div>
+</div>
+
+<!-- Invoices Directory -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="receipt" style="width: 18px; height: 18px; color: var(--primary);"></i> Invoices List
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ bills|length }} bills</span>
+  </div>
+  
+  {% if bills %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>Bill ID</th>
+        <th>Amount</th>
+        <th>Bill Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td><strong>#{{ b.bill_id }}</strong></td>
+        <td style="font-weight: 600; color: var(--text-main); font-size: 0.95rem;">₹{{ "%.2f"|format(b.amount) }}</td>
+        <td style="color: var(--text-muted);">{{ b.bill_date }}</td>
+        <td>
+          {% if b.paid %}
+            <span class="badge badge-green"><i data-lucide="check"></i> Paid</span>
+          {% else %}
+            <span class="badge badge-red"><i data-lucide="alert-triangle"></i> Unpaid</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="receipt"></i>
+    <p>No bills issued to your account.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

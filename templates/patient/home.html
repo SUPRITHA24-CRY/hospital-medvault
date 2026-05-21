@@ -1,0 +1,136 @@
+{% extends "patient/base.html" %}
+{% block title %}Patient Dashboard — MedVault{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="hero-banner stagger-in">
+  <div class="hero-banner-inner">
+    <div>
+      <span class="hero-chip"><i data-lucide="user" style="width:12px;height:12px;"></i> Patient</span>
+      <h1>Welcome back, {{ patient.name }}</h1>
+      <p>Book visits, view records, and manage your health bills in one place.</p>
+    </div>
+    <div class="hero-banner-icon">
+      <i data-lucide="heart-pulse"></i>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card stagger-in">
+    <div class="stat-icon-wrap icon-sky" style="background:var(--primary-light);color:var(--primary);">
+      <i data-lucide="calendar"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ scheduled }}</div>
+      <div class="stat-label">Scheduled Appointments</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-teal stagger-in">
+    <div class="stat-icon-wrap icon-teal">
+      <i data-lucide="folder-heart"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ records }}</div>
+      <div class="stat-label">Medical Records</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-rose stagger-in">
+    <div class="stat-icon-wrap icon-rose">
+      <i data-lucide="receipt"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ unpaid }}</div>
+      <div class="stat-label">Pending Invoices</div>
+    </div>
+  </div>
+</div>
+
+<h2 class="section-title stagger-in">
+  <i data-lucide="grid"></i> Quick Links
+</h2>
+
+<div class="quick-grid">
+  <a href="/patient/book" class="quick-card stagger-in">
+    <div class="quick-icon-wrap"><i data-lucide="plus-circle"></i></div>
+    <h3>Book Appointment</h3>
+    <p>Schedule a doctor visit</p>
+  </a>
+
+  <a href="/patient/records" class="quick-card stagger-in">
+    <div class="quick-icon-wrap" style="background:var(--color-success-bg);color:var(--color-success);"><i data-lucide="file-text"></i></div>
+    <h3>Medical Records</h3>
+    <p>Diagnoses & prescriptions</p>
+  </a>
+
+  <a href="/patient/billing" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-rose" style="background:var(--color-danger-bg);color:var(--color-danger);"><i data-lucide="credit-card"></i></div>
+    <h3>Billing</h3>
+    <p>Pay invoices & receipts</p>
+  </a>
+
+  <a href="/patient/profile" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-violet" style="background:#f3e8ff;color:#7c3aed;"><i data-lucide="user"></i></div>
+    <h3>My Profile</h3>
+    <p>Personal info & settings</p>
+  </a>
+</div>
+
+<div class="card stagger-in">
+  <div class="card-header">
+    <h2 class="card-title">
+      <i data-lucide="history"></i> Recent Appointments
+    </h2>
+    <a href="/patient/appointments" class="btn btn-sm btn-outline">View All</a>
+  </div>
+
+  {% if recent_appts %}
+  <div class="table-container" style="box-shadow:none;border:none;margin:0;">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Doctor</th>
+          <th>Specialization</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in recent_appts %}
+        <tr>
+          <td><strong>#{{ a.appointment_id }}</strong></td>
+          <td>
+            <div class="user-cell">
+              <div class="user-cell-avatar">Dr</div>
+              <div style="font-weight:600;">{{ a.doctor }}</div>
+            </div>
+          </td>
+          <td><span class="badge badge-purple">{{ a.specialization }}</span></td>
+          <td>{{ a.appt_date }}</td>
+          <td>{{ a.appt_time }}</td>
+          <td>
+            {% if a.status == 'Completed' %}
+              <span class="badge badge-green"><i data-lucide="check"></i> Done</span>
+            {% elif a.status == 'Cancelled' %}
+              <span class="badge badge-red"><i data-lucide="x"></i> Cancelled</span>
+            {% else %}
+              <span class="badge badge-yellow"><i data-lucide="clock"></i> Scheduled</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="calendar-days"></i>
+    <p>No recent appointments. <a href="/patient/book">Book your first visit</a></p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

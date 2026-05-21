@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% block title %}Add Bill — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>💳 Create Invoice</h1>
+  <a href="/admin/billing" class="btn btn-secondary">
+    <i data-lucide="arrow-left"></i> Back to List
+  </a>
+</div>
+
+<div class="card" style="max-width: 560px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <h2 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">Invoice Details</h2>
+    <p style="font-size: 0.82rem; color: var(--text-muted);">Select patient and specify the billing amount to generate a new invoice.</p>
+  </div>
+  
+  <form method="POST">
+    <div class="form-group">
+      <label>Patient *</label>
+      <select name="patient_id" required>
+        <option value="">Select Patient</option>
+        {% for p in patients %}
+          <option value="{{ p.patient_id }}">{{ p.name }} (#{{ p.patient_id }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label>Billing Amount (INR) *</label>
+      <div class="search-input-wrap" style="margin-bottom: 0;">
+        <span style="position: absolute; left: 1rem; color: var(--text-muted); font-weight: 600; font-size: 0.95rem;">₹</span>
+        <input type="number" name="amount" class="form-control" required min="1" step="0.01" placeholder="e.g. 1500" style="padding-left: 2.25rem;"/>
+      </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">
+      <i data-lucide="file-text"></i> Generate Bill
+    </button>
+  </form>
+</div>
+{% endblock %}

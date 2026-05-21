@@ -1,0 +1,75 @@
+{% extends "admin/base.html" %}
+{% block title %}Add Patient — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>➕ Add Patient</h1>
+  <a href="/admin/patients" class="btn btn-secondary">
+    <i data-lucide="arrow-left"></i> Back to List
+  </a>
+</div>
+
+<div class="card" style="max-width: 680px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <h2 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">Patient Details</h2>
+    <p style="font-size: 0.82rem; color: var(--text-muted);">Fill in all fields marked with * to register a new patient.</p>
+  </div>
+  
+  <form method="POST">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name *</label>
+        <input type="text" name="name" class="form-control" required placeholder="e.g. Arjun Kumar"/>
+      </div>
+      <div class="form-group">
+        <label>Age *</label>
+        <input type="number" name="age" class="form-control" required min="1" max="120" placeholder="e.g. 34"/>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label>Gender *</label>
+        <select name="gender" required>
+          <option value="">Select Gender</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Blood Group</label>
+        <select name="blood_group">
+          <option value="">Select Blood Group</option>
+          <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+          <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="tel" name="phone" class="form-control" placeholder="e.g. 9876543210"/>
+      </div>
+      <div class="form-group">
+        <label>Email (For login) *</label>
+        <input type="email" name="email" class="form-control" required placeholder="e.g. arjun@email.com"/>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Password (Default: patient123)</label>
+      <input type="text" name="password" class="form-control" placeholder="patient123"/>
+    </div>
+    
+    <div class="form-group">
+      <label>Address</label>
+      <textarea name="address" class="form-control" rows="3" placeholder="Enter patient residential address..."></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.75rem;">
+      <i data-lucide="user-plus"></i> Add Patient Record
+    </button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "patient/base.html" %}
+{% block title %}My Appointments — Patient{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>📅 My Appointments</h1>
+  <a href="/patient/book" class="btn btn-primary">
+    <i data-lucide="plus"></i> Book Appointment
+  </a>
+</div>
+
+<!-- Appointments Table -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i> Appointment List
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ appts|length }} bookings</span>
+  </div>
+  
+  {% if appts %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Consultant Doctor</th>
+        <th>Specialization</th>
+        <th>Contact Phone</th>
+        <th>Appt Date</th>
+        <th>Appt Time</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in appts %}
+      <tr>
+        <td><strong>#{{ a.appointment_id }}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--text-main);">Dr. {{ a.doctor }}</div>
+        </td>
+        <td>
+          <span class="badge badge-purple" style="font-weight: 500;">{{ a.specialization }}</span>
+        </td>
+        <td>{{ a.doc_phone or '—' }}</td>
+        <td>{{ a.appt_date }}</td>
+        <td>{{ a.appt_time }}</td>
+        <td>
+          {% if a.status == 'Completed' %}
+            <span class="badge badge-green"><i data-lucide="check"></i> Done</span>
+          {% elif a.status == 'Cancelled' %}
+            <span class="badge badge-red"><i data-lucide="x"></i> Cancelled</span>
+          {% else %}
+            <span class="badge badge-yellow"><i data-lucide="clock"></i> Scheduled</span>
+          {% endif %}
+        </td>
+        <td style="color: var(--text-muted); font-size: 0.85rem;">{{ a.notes or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="calendar"></i>
+    <p>No appointments scheduled yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

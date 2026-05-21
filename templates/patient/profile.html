@@ -1,0 +1,47 @@
+{% extends "patient/base.html" %}
+{% block title %}My Profile — Patient{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>👤 Patient Profile</h1>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto; padding: 2.25rem;">
+  <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+    <div style="width: 80px; height: 80px; border-radius: 50%; background-color: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; flex-shrink: 0; box-shadow: 0 4px 10px var(--primary-glow);">
+      👤
+    </div>
+    <div>
+      <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.25rem;">
+        {{ patient.name }}
+      </h2>
+      <span class="badge badge-purple" style="font-size: 0.8rem; padding: 0.3rem 0.75rem;">
+        Patient ID: #{{ patient.patient_id }}
+      </span>
+    </div>
+  </div>
+  
+  {% set fields = [
+    ('🧑‍🤝‍🧑 Gender', patient.gender, 'user-check'),
+    ('🎂 Age', patient.age ~ ' years', 'calendar'),
+    ('🩸 Blood Group', patient.blood_group or '—', 'droplet'),
+    ('📞 Contact Phone', patient.phone or '—', 'phone'),
+    ('✉️ Email Address', patient.email or '—', 'mail'),
+    ('🏥 Admitted On', patient.admitted_on or '—', 'hospital'),
+    ('🏠 Residential Address', patient.address or '—', 'map-pin')
+  ] %}
+  
+  <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+    {% for label, value, icon in fields %}
+    <div style="display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; background-color: #f8fafc; border-radius: var(--radius-md); border: 1px solid var(--border-color); transition: background-color var(--transition-fast);">
+      <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem; font-weight: 500;">
+        <i data-lucide="{{ icon }}" style="width: 18px; height: 18px; color: var(--primary);"></i>
+        <span>{{ label }}</span>
+      </div>
+      <span style="font-weight: 600; color: var(--text-main); font-size: 0.95rem; text-align: right; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+        {{ value }}
+      </span>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

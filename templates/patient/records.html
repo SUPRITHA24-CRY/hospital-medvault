@@ -1,0 +1,57 @@
+{% extends "patient/base.html" %}
+{% block title %}My Medical Records — Patient{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>🗂️ My Medical Records</h1>
+</div>
+
+<!-- Medical Records Directory -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="folder-heart" style="width: 18px; height: 18px; color: var(--primary);"></i> Health Diagnostics & Prescriptions
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ records|length }} records</span>
+  </div>
+  
+  {% if records %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>Record ID</th>
+        <th>Diagnosis</th>
+        <th>Treatment</th>
+        <th>Prescription</th>
+        <th>Consulted Doctor</th>
+        <th>Consultation Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><strong>#{{ r.record_id }}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--color-danger);">{{ r.diagnosis or '—' }}</div>
+        </td>
+        <td style="font-size: 0.85rem; color: var(--text-main);">{{ r.treatment or '—' }}</td>
+        <td style="font-size: 0.85rem; color: var(--primary); font-weight: 500;">
+          <i data-lucide="pill" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 0.25rem;"></i>
+          {{ r.prescription or '—' }}
+        </td>
+        <td>
+          <div style="font-weight: 600; color: var(--text-main);">Dr. {{ r.doctor }}</div>
+          <span class="badge badge-blue" style="font-size: 0.7rem; padding: 0.15rem 0.5rem;">{{ r.specialization }}</span>
+        </td>
+        <td style="color: var(--text-muted); font-size: 0.85rem;">{{ r.record_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="folder-heart"></i>
+    <p>No medical records found in your folder.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

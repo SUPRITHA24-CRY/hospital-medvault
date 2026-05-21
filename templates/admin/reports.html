@@ -1,0 +1,101 @@
+{% extends "admin/base.html" %}
+{% block title %}Reports — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>📊 Reports & Analytics</h1>
+</div>
+
+<div class="report-layout">
+  
+  <!-- Revenue Summary Card -->
+  <div class="card" style="margin-bottom: 0;">
+    <h2 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="wallet" style="color: var(--primary);"></i> Revenue & Collections Summary
+    </h2>
+    <div class="revenue-grid">
+      <div class="revenue-card" style="background-color: var(--primary-light); border-color: rgba(99, 102, 241, 0.2);">
+        <div class="amount" style="color: var(--primary);">₹{{ "%.0f"|format(revenue.total or 0) }}</div>
+        <div class="label">Total Invoiced</div>
+      </div>
+      
+      <div class="revenue-card" style="background-color: var(--color-success-bg); border-color: var(--color-success-border);">
+        <div class="amount" style="color: var(--color-success);">₹{{ "%.0f"|format(revenue.collected or 0) }}</div>
+        <div class="label" style="color: var(--color-success);">Total Collected</div>
+      </div>
+      
+      <div class="revenue-card" style="background-color: var(--color-danger-bg); border-color: var(--color-danger-border);">
+        <div class="amount" style="color: var(--color-danger);">₹{{ "%.0f"|format(revenue.pending or 0) }}</div>
+        <div class="label" style="color: var(--color-danger);">Total Pending</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics Grid -->
+  <div class="analytics-grid">
+    <!-- Patients by Blood Group -->
+    <div class="card" style="margin-bottom: 0;">
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="droplet" style="color: var(--color-danger);"></i> Patients by Blood Group
+      </h3>
+      {% set mx = blood_groups[0].total if blood_groups else 1 %}
+      {% if blood_groups %}
+        {% for b in blood_groups %}
+        <div class="bar-row">
+          <span class="bar-label">{{ b.blood_group or 'Unknown' }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {{ (b.total / mx * 100)|int }}%; background-color: var(--color-danger);"></div>
+          </div>
+          <span class="bar-val">{{ b.total }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.88rem; text-align: center; padding: 2rem;">No patient data available.</p>
+      {% endif %}
+    </div>
+
+    <!-- Appointments by Status -->
+    <div class="card" style="margin-bottom: 0;">
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="check-square" style="color: var(--color-warning);"></i> Appointments Status
+      </h3>
+      {% set mx2 = appt_stats|map(attribute='total')|max if appt_stats else 1 %}
+      {% if appt_stats %}
+        {% for a in appt_stats %}
+        <div class="bar-row">
+          <span class="bar-label">{{ a.status }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {{ (a.total / mx2 * 100)|int }}%; background-color: {% if a.status=='Completed' %}var(--color-success){% elif a.status=='Cancelled' %}var(--color-danger){% else %}var(--color-warning){% endif %};"></div>
+          </div>
+          <span class="bar-val">{{ a.total }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.88rem; text-align: center; padding: 2rem;">No appointment data available.</p>
+      {% endif %}
+    </div>
+
+    <!-- Doctor Workload -->
+    <div class="card" style="grid-column: 1 / -1; margin-bottom: 0;">
+      <h3 style="font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+        <i data-lucide="stethoscope" style="color: var(--primary);"></i> Doctor Workload (Total Appointments)
+      </h3>
+      {% set mx3 = doctor_stats[0].total if doctor_stats else 1 %}
+      {% if doctor_stats %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem 2rem;">
+        {% for d in doctor_stats %}
+        <div class="bar-row">
+          <span class="bar-label" style="width: 140px; font-size: 0.82rem;">{{ d.doctor }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {{ (d.total / (mx3 if mx3 > 0 else 1) * 100)|int }}%;"></div>
+          </div>
+          <span class="bar-val">{{ d.total }}</span>
+        </div>
+        {% endfor %}
+        </div>
+      {% else %}
+        <p style="color: var(--text-muted); font-size: 0.88rem; text-align: center; padding: 2rem;">No doctor data available.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends "doctor/base.html" %}
+{% block title %}Doctor Dashboard — MedVault{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="hero-banner stagger-in">
+  <div class="hero-banner-inner">
+    <div>
+      <span class="hero-chip"><i data-lucide="stethoscope" style="width:12px;height:12px;"></i> Practitioner</span>
+      <h1>Welcome, Dr. {{ doctor.name }}</h1>
+      <p>Your schedule, completed consultations, and today's patient queue.</p>
+    </div>
+    <div class="hero-banner-icon">
+      <i data-lucide="calendar-check"></i>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card stagger-in">
+    <div class="stat-icon-wrap icon-sky">
+      <i data-lucide="clock"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ scheduled }}</div>
+      <div class="stat-label">Scheduled</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-teal stagger-in">
+    <div class="stat-icon-wrap icon-teal">
+      <i data-lucide="check-circle-2"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ completed }}</div>
+      <div class="stat-label">Completed</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-amber stagger-in">
+    <div class="stat-icon-wrap icon-amber">
+      <i data-lucide="calendar"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ today }}</div>
+      <div class="stat-label">Today</div>
+    </div>
+  </div>
+</div>
+
+<div class="card stagger-in">
+  <div class="card-header">
+    <h2 class="card-title">
+      <i data-lucide="calendar-check"></i> Today's Schedule
+    </h2>
+    <span class="header-pill" style="margin:0;">
+      <i data-lucide="users"></i>
+      <span>{{ today_appts|length if today_appts else 0 }} patients</span>
+    </span>
+  </div>
+
+  {% if today_appts %}
+  <div class="table-container" style="box-shadow:none;border:none;margin:0;">
+    <table class="modern-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Patient</th>
+          <th>Age</th>
+          <th>Blood</th>
+          <th>Status</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in today_appts %}
+        <tr>
+          <td><strong style="color:var(--primary);font-family:var(--font-heading);">{{ a.appt_time }}</strong></td>
+          <td>
+            <div class="user-cell">
+              <div class="user-cell-avatar">{{ a.patient[0] if a.patient else 'P' }}</div>
+              <div style="font-weight:600;">{{ a.patient }}</div>
+            </div>
+          </td>
+          <td>{{ a.age }} yrs</td>
+          <td><span class="badge badge-blue"><i data-lucide="droplet"></i> {{ a.blood_group or '—' }}</span></td>
+          <td>
+            {% if a.status == 'Completed' %}
+              <span class="badge badge-green"><i data-lucide="check"></i> Done</span>
+            {% elif a.status == 'Cancelled' %}
+              <span class="badge badge-red"><i data-lucide="x"></i> Cancelled</span>
+            {% else %}
+              <span class="badge badge-yellow"><i data-lucide="clock"></i> Scheduled</span>
+            {% endif %}
+          </td>
+          <td style="color:var(--text-muted);font-size:0.85rem;">{{ a.notes or '—' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="calendar-x"></i>
+    <p>No appointments scheduled for today. Enjoy your day off!</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

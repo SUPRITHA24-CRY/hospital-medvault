@@ -1,0 +1,57 @@
+{% extends "patient/base.html" %}
+{% block title %}Book Appointment — Patient{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>📅 Book Appointment</h1>
+  <a href="/patient" class="btn btn-secondary">
+    <i data-lucide="arrow-left"></i> Back to Dashboard
+  </a>
+</div>
+
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+  <div style="margin-bottom: 1.5rem;">
+    <h2 style="font-size: 1.2rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.25rem;">Schedule Appointment</h2>
+    <p style="font-size: 0.82rem; color: var(--text-muted);">Choose a doctor, pick date & time, and add notes if required.</p>
+  </div>
+  
+  <form method="POST">
+    <div class="form-group">
+      <label>Select Consultant Doctor *</label>
+      <select name="doctor_id" required>
+        <option value="">Choose Doctor...</option>
+        {% for d in doctors %}
+          <option value="{{ d.doctor_id }}">
+            Dr. {{ d.name }} — {{ d.specialization or 'General Practitioner' }} ({{ d.dept_name or 'General Medicine' }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group">
+        <label>Appointment Date *</label>
+        <div class="search-input-wrap" style="margin-bottom: 0;">
+          <i data-lucide="calendar" style="position: absolute; left: 1rem; color: var(--text-muted); width: 18px; height: 18px;"></i>
+          <input type="date" name="appt_date" class="form-control" required style="padding-left: 2.75rem;"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Appointment Time *</label>
+        <div class="search-input-wrap" style="margin-bottom: 0;">
+          <i data-lucide="clock" style="position: absolute; left: 1rem; color: var(--text-muted); width: 18px; height: 18px;"></i>
+          <input type="time" name="appt_time" class="form-control" required style="padding-left: 2.75rem;"/>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Reason / Notes</label>
+      <textarea name="notes" class="form-control" rows="3" placeholder="Specify any symptoms, reason for consultation, or notes for the doctor..."></textarea>
+    </div>
+    
+    <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">
+      <i data-lucide="calendar-plus"></i> Confirm Appointment
+    </button>
+  </form>
+</div>
+{% endblock %}

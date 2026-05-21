@@ -1,0 +1,96 @@
+{% extends "admin/base.html" %}
+{% block title %}Appointments — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>📅 Appointments Management</h1>
+</div>
+
+<!-- Filters Bar -->
+<div style="display: flex; gap: 8px; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 4px;">
+  <a href="/admin/appointments" class="btn btn-sm {% if not status %}btn-primary{% else %}btn-secondary{% endif %}">
+    All
+  </a>
+  <a href="/admin/appointments?status=Scheduled" class="btn btn-sm {% if status=='Scheduled' %}btn-primary{% else %}btn-secondary{% endif %}">
+    ⏳ Scheduled
+  </a>
+  <a href="/admin/appointments?status=Completed" class="btn btn-sm {% if status=='Completed' %}btn-primary{% else %}btn-secondary{% endif %}">
+    ✅ Completed
+  </a>
+  <a href="/admin/appointments?status=Cancelled" class="btn btn-sm {% if status=='Cancelled' %}btn-primary{% else %}btn-secondary{% endif %}">
+    ❌ Cancelled
+  </a>
+</div>
+
+<!-- Appointments Table -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i> Appointment Schedule
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ appts|length }} found</span>
+  </div>
+  
+  {% if appts %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patient Name</th>
+        <th>Consultant Doctor</th>
+        <th>Specialization</th>
+        <th>Appt Date</th>
+        <th>Appt Time</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for a in appts %}
+      <tr>
+        <td><strong>#{{ a.appointment_id }}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--text-main);">{{ a.patient }}</div>
+        </td>
+        <td>Dr. {{ a.doctor }}</td>
+        <td>
+          <span class="badge badge-purple" style="font-weight: 500;">{{ a.specialization }}</span>
+        </td>
+        <td>{{ a.appt_date }}</td>
+        <td>
+          <span style="font-weight: 500;">{{ a.appt_time }}</span>
+        </td>
+        <td>
+          {% if a.status == 'Completed' %}
+            <span class="badge badge-green"><i data-lucide="check"></i> Completed</span>
+          {% elif a.status == 'Cancelled' %}
+            <span class="badge badge-red"><i data-lucide="x"></i> Cancelled</span>
+          {% else %}
+            <span class="badge badge-yellow"><i data-lucide="clock"></i> Scheduled</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if a.status == 'Scheduled' %}
+            <div style="display: flex; gap: 6px;">
+              <a href="/admin/appointments/update/{{ a.appointment_id }}/Completed" class="btn btn-sm btn-success" title="Mark as Completed">
+                Done
+              </a>
+              <a href="/admin/appointments/update/{{ a.appointment_id }}/Cancelled" class="btn btn-sm btn-danger" title="Cancel Appointment" onclick="return confirm('Cancel this appointment?')">
+                Cancel
+              </a>
+            </div>
+          {% else %}
+            <span style="font-size: 0.8rem; color: var(--text-muted);">No action</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="calendar"></i>
+    <p>No appointments match the selected filter.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

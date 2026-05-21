@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0d9488"/>
+  <title>MedVault — Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="auth-portal">
+<div class="auth-split">
+  <section class="auth-hero">
+    <div class="auth-shape auth-shape-1"></div>
+    <div class="auth-shape auth-shape-2"></div>
+    <div class="auth-hero-content">
+      <div class="auth-hero-logo">
+        <div class="brand-mark"><i data-lucide="heart-pulse"></i></div>
+        <span>Med<span style="color:#5eead4;">Vault</span></span>
+      </div>
+      <h1>Healthcare management, simplified.</h1>
+      <p class="lead">One secure portal for admins, doctors, and patients — appointments, records, and billing in one place.</p>
+      <ul class="auth-features">
+        <li>
+          <span class="auth-feature-icon"><i data-lucide="shield-check"></i></span>
+          <span>Role-based access with encrypted sessions</span>
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i data-lucide="calendar-clock"></i></span>
+          <span>Real-time appointment scheduling</span>
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i data-lucide="file-heart"></i></span>
+          <span>Digital records & billing at your fingertips</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="auth-panel">
+    <div class="auth-container">
+      <div class="auth-logo-box">
+        <div class="brand-mark"><i data-lucide="heart-pulse"></i></div>
+        Med<span>Vault</span>
+      </div>
+      <div class="auth-subtitle">Sign in to your portal</div>
+
+      <div class="auth-card">
+        <h2>Access Portal</h2>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="alert-container">
+              {% for cat, msg in messages %}
+                <div class="alert alert-{% if cat == 'error' %}error{% else %}success{% endif %}">
+                  <i data-lucide="alert-circle"></i>
+                  <span>{{ msg }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab active" onclick="setRole('admin', this)">
+            <i data-lucide="shield-check"></i>
+            <span>Admin</span>
+          </button>
+          <button type="button" class="auth-tab" onclick="setRole('doctor', this)">
+            <i data-lucide="stethoscope"></i>
+            <span>Doctor</span>
+          </button>
+          <button type="button" class="auth-tab" onclick="setRole('patient', this)">
+            <i data-lucide="user"></i>
+            <span>Patient</span>
+          </button>
+        </div>
+
+        <form method="POST" action="/">
+          <input type="hidden" name="role" id="role-input" value="admin"/>
+
+          <div class="form-group">
+            <label id="username-label">Username</label>
+            <div class="search-input-wrap" style="margin-bottom: 0;">
+              <i data-lucide="user-check" id="username-icon"></i>
+              <input type="text" name="username" id="username" required placeholder="Enter username" class="form-control" style="padding-left: 2.75rem;"/>
+            </div>
+            <span class="form-hint" id="username-hint">Demo: admin</span>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <div class="search-input-wrap" style="margin-bottom: 0;">
+              <i data-lucide="lock"></i>
+              <input type="password" name="password" required placeholder="Enter password" class="form-control" style="padding-left: 2.75rem;"/>
+            </div>
+            <span class="form-hint" id="password-hint">Demo: admin123</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg" id="login-btn" style="width: 100%; margin-top: 0.5rem;">
+            <i data-lucide="log-in"></i>
+            <span>Login as Admin</span>
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          New patient? <a href="/register">Create an account</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+  const roles = {
+    admin:   { label:'Username', placeholder:'Enter username', icon:'shield-check', uhint:'Demo: admin', phint:'Demo: admin123', btn:'Login as Admin' },
+    doctor:  { label:'License Number', placeholder:'Enter your license number', icon:'stethoscope', uhint:'Your registered license number', phint:'Your account password', btn:'Login as Doctor' },
+    patient: { label:'Email Address', placeholder:'Enter your email address', icon:'mail', uhint:'Your registered email', phint:'Your account password', btn:'Login as Patient' }
+  };
+  function setRole(role, el) {
+    document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('role-input').value = role;
+    const r = roles[role];
+    document.getElementById('username-label').textContent = r.label;
+    document.getElementById('username').placeholder = r.placeholder;
+    document.getElementById('username-hint').textContent = r.uhint;
+    document.getElementById('password-hint').textContent = r.phint;
+    document.getElementById('login-btn').querySelector('span').textContent = r.btn;
+    const userIcon = document.getElementById('username-icon');
+    userIcon.setAttribute('data-lucide', r.icon === 'stethoscope' ? 'stethoscope' : (r.icon === 'mail' ? 'mail' : 'user-check'));
+    lucide.createIcons();
+  }
+  lucide.createIcons();
+</script>
+</body>
+</html>

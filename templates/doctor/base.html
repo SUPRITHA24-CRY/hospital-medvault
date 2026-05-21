@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#0ea5e9"/>
+  <title>{% block title %}Doctor — MedVault{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <!-- Load Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  {% block extra_css %}{% endblock %}
+</head>
+<body class="doctor-portal">
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="app-container">
+  
+  <!-- Navigation Sidebar -->
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <a class="brand" href="/doctor">
+        <div class="brand-mark"><i data-lucide="heart-pulse"></i></div>
+        Med<span>Vault</span>
+      </a>
+      <span class="portal-badge">DOCTOR</span>
+    </div>
+    
+    <ul class="sidebar-menu">
+      <li class="menu-item">
+        <a href="/doctor" {% if request.path == '/doctor' %}class="active"{% endif %}>
+          <i data-lucide="layout-dashboard"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/doctor/appointments" {% if 'appointments' in request.path %}class="active"{% endif %}>
+          <i data-lucide="calendar"></i>
+          <span>My Appointments</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/doctor/patients" {% if 'patients' in request.path %}class="active"{% endif %}>
+          <i data-lucide="users"></i>
+          <span>My Patients</span>
+        </a>
+      </li>
+      <li class="menu-item">
+        <a href="/doctor/profile" {% if 'profile' in request.path %}class="active"{% endif %}>
+          <i data-lucide="user-check"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+    </ul>
+    
+    <div class="sidebar-footer">
+      <div class="user-profile-brief">
+        <div class="avatar-initials">
+          {{ session.user.name[0] if session.user.name else 'D' }}
+        </div>
+        <div class="user-info">
+          <div class="user-name">{{ session.user.name }}</div>
+          <div class="user-role">Medical Practitioner</div>
+        </div>
+        <a href="/logout" class="btn-logout-sidebar" title="Logout">
+          <i data-lucide="log-out" style="width:16px; height:16px;"></i>
+        </a>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Main Wrapper -->
+  <div class="main-wrapper">
+    <header class="main-header">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+          <i data-lucide="menu"></i>
+        </button>
+        <div>
+          <div class="page-title">{% block page_title %}Doctor Portal{% endblock %}</div>
+        </div>
+      </div>
+      <div class="header-pill">
+        <i data-lucide="stethoscope"></i>
+        <span>Dr. <strong>{{ session.user.name }}</strong></span>
+      </div>
+    </header>
+    
+    <main class="main-content">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="alert-container">
+            {% for cat, msg in messages %}
+              <div class="alert alert-{% if cat == 'error' %}error{% elif cat == 'success' %}success{% else %}info{% endif %}">
+                <i data-lucide="{% if cat == 'error' %}alert-octagon{% elif cat == 'success' %}check-circle-2{% else %}info{% endif %}"></i>
+                <span>{{ msg }}</span>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>lucide.createIcons();</script>
+</body>
+</html>

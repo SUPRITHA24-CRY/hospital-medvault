@@ -1,0 +1,81 @@
+{% extends "admin/base.html" %}
+{% block title %}Patients — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Patients Management</h1>
+  <a href="/admin/patients/add" class="btn btn-primary">
+    <i data-lucide="plus"></i> Add Patient
+  </a>
+</div>
+
+<!-- Search Bar -->
+<form method="GET" action="/admin/patients" class="search-container">
+  <div class="search-input-wrap">
+    <i data-lucide="search"></i>
+    <input type="text" name="search" placeholder="Search by patient name or ID..." value="{{ search }}"/>
+  </div>
+  <button type="submit" class="btn btn-secondary">Search</button>
+</form>
+
+<!-- Patients Table -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i> Patient Records
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ patients|length }} records</span>
+  </div>
+  
+  {% if patients %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Blood</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Admitted On</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td><strong>#{{ p.patient_id }}</strong></td>
+        <td>
+          <div class="user-cell">
+            <div class="user-cell-avatar">{{ p.name[0] if p.name else 'P' }}</div>
+            <div style="font-weight:600;">{{ p.name }}</div>
+          </div>
+        </td>
+        <td>{{ p.age }} yrs</td>
+        <td>{{ p.gender }}</td>
+        <td>
+          <span class="badge badge-blue">
+            <i data-lucide="droplet" style="width:10px; height:10px;"></i>
+            {{ p.blood_group or '—' }}
+          </span>
+        </td>
+        <td>{{ p.phone or '—' }}</td>
+        <td>{{ p.email or '—' }}</td>
+        <td style="color: var(--text-muted);">{{ p.admitted_on }}</td>
+        <td>
+          <a href="/admin/patients/delete/{{ p.patient_id }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete patient #{{ p.patient_id }}?')">
+            <i data-lucide="trash-2" style="width:14px; height:14px;"></i> Delete
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="users-2"></i>
+    <p>No patients found matching the criteria.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

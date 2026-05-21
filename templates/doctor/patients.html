@@ -1,0 +1,58 @@
+{% extends "doctor/base.html" %}
+{% block title %}My Patients — Doctor{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>👤 My Patients</h1>
+</div>
+
+<!-- Patients Directory -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i> Patient Directory
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Consulted: {{ patients|length }} patients</span>
+  </div>
+  
+  {% if patients %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patient Name</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Blood Group</th>
+        <th>Phone Number</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td><strong>#{{ p.patient_id }}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--text-main);">{{ p.name }}</div>
+        </td>
+        <td>{{ p.age }} yrs</td>
+        <td>{{ p.gender }}</td>
+        <td>
+          <span class="badge badge-blue">
+            <i data-lucide="droplet" style="width:10px; height:10px;"></i>
+            {{ p.blood_group or '—' }}
+          </span>
+        </td>
+        <td>{{ p.phone or '—' }}</td>
+        <td style="color: var(--text-muted);">{{ p.email or '—' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="users"></i>
+    <p>No patients have booked appointments with you yet.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+{% extends "admin/base.html" %}
+{% block title %}Admin Dashboard — MedVault{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="hero-banner stagger-in">
+  <div class="hero-banner-inner">
+    <div>
+      <span class="hero-chip"><i data-lucide="shield-check" style="width:12px;height:12px;"></i> Administrator</span>
+      <h1>Good day, {{ session.user.name }}</h1>
+      <p>Overview of patients, doctors, appointments, and pending revenue.</p>
+    </div>
+    <div class="hero-banner-icon">
+      <i data-lucide="layout-dashboard"></i>
+    </div>
+  </div>
+</div>
+
+<div class="stat-grid">
+  <div class="stat-card stagger-in">
+    <div class="stat-icon-wrap">
+      <i data-lucide="users"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ patients_count }}</div>
+      <div class="stat-label">Total Patients</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-teal stagger-in">
+    <div class="stat-icon-wrap icon-teal">
+      <i data-lucide="activity"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ doctors_count }}</div>
+      <div class="stat-label">Doctors</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-amber stagger-in">
+    <div class="stat-icon-wrap icon-amber">
+      <i data-lucide="calendar"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">{{ appt_count }}</div>
+      <div class="stat-label">Scheduled</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-rose stagger-in">
+    <div class="stat-icon-wrap icon-rose">
+      <i data-lucide="credit-card"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">₹{{ "%.0f"|format(unpaid) }}</div>
+      <div class="stat-label">Pending Bills</div>
+    </div>
+  </div>
+</div>
+
+<h2 class="section-title stagger-in">
+  <i data-lucide="zap"></i> Quick Actions
+</h2>
+
+<div class="quick-grid">
+  <a href="/admin/patients/add" class="quick-card stagger-in">
+    <div class="quick-icon-wrap"><i data-lucide="user-plus"></i></div>
+    <h3>Add Patient</h3>
+    <p>Register new patient</p>
+  </a>
+
+  <a href="/admin/doctors/add" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-teal" style="background:var(--color-success-bg);color:var(--color-success);"><i data-lucide="stethoscope"></i></div>
+    <h3>Add Doctor</h3>
+    <p>Register new doctor</p>
+  </a>
+
+  <a href="/admin/billing/add" class="quick-card stagger-in">
+    <div class="quick-icon-wrap" style="background:var(--color-info-bg);color:var(--color-info);"><i data-lucide="receipt"></i></div>
+    <h3>Add Bill</h3>
+    <p>Create a new bill</p>
+  </a>
+
+  <a href="/admin/appointments" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-amber" style="background:var(--color-warning-bg);color:var(--color-warning);"><i data-lucide="calendar-days"></i></div>
+    <h3>Appointments</h3>
+    <p>Manage appointments</p>
+  </a>
+
+  <a href="/admin/billing?paid=0" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-rose" style="background:var(--color-danger-bg);color:var(--color-danger);"><i data-lucide="alert-triangle"></i></div>
+    <h3>Unpaid Bills</h3>
+    <p>View pending payments</p>
+  </a>
+
+  <a href="/admin/reports" class="quick-card stagger-in">
+    <div class="quick-icon-wrap icon-violet" style="background:#f3e8ff;color:#7c3aed;"><i data-lucide="line-chart"></i></div>
+    <h3>Reports</h3>
+    <p>Analytics & stats</p>
+  </a>
+</div>
+{% endblock %}

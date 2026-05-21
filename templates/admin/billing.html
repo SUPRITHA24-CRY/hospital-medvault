@@ -1,0 +1,114 @@
+{% extends "admin/base.html" %}
+{% block title %}Billing — Admin{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>💳 Billing & Invoices</h1>
+  <a href="/admin/billing/add" class="btn btn-primary">
+    <i data-lucide="plus"></i> Add New Bill
+  </a>
+</div>
+
+<!-- Revenue Metrics Grid -->
+<div class="stat-grid" style="margin-bottom: 1.5rem;">
+  <div class="stat-card" style="border-left-color: var(--primary);">
+    <div class="stat-icon-wrap" style="background-color: var(--primary-light); color: var(--primary);">
+      <i data-lucide="calculator"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">₹{{ "%.0f"|format(total) }}</div>
+      <div class="stat-label">Total Billed</div>
+    </div>
+  </div>
+  
+  <div class="stat-card" style="border-left-color: var(--color-success);">
+    <div class="stat-icon-wrap" style="background-color: var(--color-success-bg); color: var(--color-success);">
+      <i data-lucide="check-circle"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">₹{{ "%.0f"|format(collected) }}</div>
+      <div class="stat-label">Total Collected</div>
+    </div>
+  </div>
+  
+  <div class="stat-card" style="border-left-color: var(--color-danger);">
+    <div class="stat-icon-wrap" style="background-color: var(--color-danger-bg); color: var(--color-danger);">
+      <i data-lucide="alert-circle"></i>
+    </div>
+    <div class="stat-details">
+      <div class="stat-num">₹{{ "%.0f"|format(pending) }}</div>
+      <div class="stat-label">Total Pending</div>
+    </div>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div style="display: flex; gap: 8px; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 4px;">
+  <a href="/admin/billing" class="btn btn-sm {% if paid == '' %}btn-primary{% else %}btn-secondary{% endif %}">
+    All Bills
+  </a>
+  <a href="/admin/billing?paid=1" class="btn btn-sm {% if paid == '1' %}btn-primary{% else %}btn-secondary{% endif %}">
+    🟢 Paid
+  </a>
+  <a href="/admin/billing?paid=0" class="btn btn-sm {% if paid == '0' %}btn-primary{% else %}btn-secondary{% endif %}">
+    🔴 Unpaid
+  </a>
+</div>
+
+<!-- Bills Table -->
+<div class="table-container">
+  <div class="table-header-bar">
+    <h2 style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+      <i data-lucide="list" style="width: 18px; height: 18px; color: var(--primary);"></i> Invoices List
+    </h2>
+    <span style="font-size: 0.8rem; color: var(--text-muted);">Total: {{ bills|length }} invoices</span>
+  </div>
+  
+  {% if bills %}
+  <table class="modern-table">
+    <thead>
+      <tr>
+        <th>Bill ID</th>
+        <th>Patient Name</th>
+        <th>Amount</th>
+        <th>Bill Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td><strong>#{{ b.bill_id }}</strong></td>
+        <td>
+          <div style="font-weight: 600; color: var(--text-main);">{{ b.patient }}</div>
+        </td>
+        <td style="font-weight: 600; color: var(--text-main);">₹{{ "%.2f"|format(b.amount) }}</td>
+        <td style="color: var(--text-muted);">{{ b.bill_date }}</td>
+        <td>
+          {% if b.paid %}
+            <span class="badge badge-green"><i data-lucide="check"></i> Paid</span>
+          {% else %}
+            <span class="badge badge-red"><i data-lucide="alert-triangle"></i> Unpaid</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if not b.paid %}
+            <a href="/admin/billing/pay/{{ b.bill_id }}" class="btn btn-sm btn-success" onclick="return confirm('Mark this bill as Paid?')">
+              <i data-lucide="check" style="width: 12px; height: 12px; margin-right: 2px;"></i> Mark Paid
+            </a>
+          {% else %}
+            <span style="font-size: 0.8rem; color: var(--text-muted);">No action</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <i data-lucide="receipt"></i>
+    <p>No billing records found matching the criteria.</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
